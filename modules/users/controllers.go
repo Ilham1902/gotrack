@@ -14,9 +14,6 @@ import (
 // @Accept json
 // @Produce json
 // @Param loginRequest body LoginRequest true "Login Request"
-// @Success 200 {object} common.APIResponse{data=LoginResponse} "Success"
-// @Failure 400 {object} common.APIResponse "Bad Request"
-// @Failure 500 {object} common.APIResponse "Internal Server Error"
 // @Router /api/users/login [post]
 func Login(ctx *gin.Context) {
 	var (
@@ -40,9 +37,6 @@ func Login(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param signUpRequest body SignUpRequest true "Sign Up Request"
-// @Success 200 {object} common.APIResponse "Success"
-// @Failure 400 {object} common.APIResponse "Bad Request"
-// @Failure 500 {object} common.APIResponse "Internal Server Error"
 // @Router /api/users/signup [post]
 func SignUp(ctx *gin.Context) {
 	var (
@@ -66,9 +60,6 @@ func SignUp(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param TrackRequest body TrackRequest true "Sign Up Request"
-// @Success 200 {object} common.APIResponse{data=IPInfoResponse} "Success"
-// @Failure 400 {object} common.APIResponse "Bad Request"
-// @Failure 500 {object} common.APIResponse "Internal Server Error"
 // @Security Bearer
 // @Router /api/users/track [post]
 func Track(ctx *gin.Context) {

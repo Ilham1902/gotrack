@@ -44,38 +44,7 @@ const docTemplate = `{
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully created the order",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/common.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/orders.OrderRequest"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request, invalid data provided",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
         "/api/order/delivery/{id}": {
@@ -105,26 +74,7 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully updated the order",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request, invalid data provided",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
         "/api/order/success/{id}": {
@@ -154,26 +104,7 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully updated the order",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request, invalid data provided",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
         "/api/order/{id}": {
@@ -205,38 +136,7 @@ const docTemplate = `{
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully updated the order",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/common.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/orders.OrderRequest"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request, invalid data provided",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    }
-                }
+                "responses": {}
             },
             "delete": {
                 "security": [
@@ -264,32 +164,7 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid ID format",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Order not found",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
         "/api/orders": {
@@ -330,26 +205,7 @@ const docTemplate = `{
                         "in": "query"
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved orders",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request, invalid data provided",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
         "/api/users/login": {
@@ -376,38 +232,7 @@ const docTemplate = `{
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/common.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/users.LoginResponse"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
         "/api/users/signup": {
@@ -434,26 +259,7 @@ const docTemplate = `{
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
         "/api/users/track": {
@@ -485,57 +291,11 @@ const docTemplate = `{
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/common.APIResponse"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/users.IPInfoResponse"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/common.APIResponse"
-                        }
-                    }
-                }
+                "responses": {}
             }
         }
     },
     "definitions": {
-        "common.APIResponse": {
-            "type": "object",
-            "properties": {
-                "data": {},
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                },
-                "total_data": {
-                    "type": "integer"
-                }
-            }
-        },
         "orders.OrderDetail": {
             "type": "object",
             "properties": {
@@ -577,42 +337,6 @@ const docTemplate = `{
                 }
             }
         },
-        "users.IPInfoResponse": {
-            "type": "object",
-            "properties": {
-                "city": {
-                    "type": "string"
-                },
-                "country": {
-                    "type": "string"
-                },
-                "hostname": {
-                    "type": "string"
-                },
-                "ip": {
-                    "type": "string"
-                },
-                "loc": {
-                    "description": "Format: \"latitude,longitude\"",
-                    "type": "string"
-                },
-                "org": {
-                    "type": "string"
-                },
-                "postal": {
-                    "type": "string"
-                },
-                "region": {
-                    "type": "string"
-                },
-                "timezone": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "users.LoginRequest": {
             "type": "object",
             "properties": {
@@ -620,14 +344,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "users.LoginResponse": {
-            "type": "object",
-            "properties": {
-                "token": {
                     "type": "string"
                 }
             }

@@ -14,9 +14,6 @@ import (
 // @Accept json
 // @Produce json
 // @Param order body OrderRequest true "Order data"
-// @Success 200 {object} common.APIResponse{data=OrderRequest} "Successfully created the order"
-// @Failure 400 {object} common.APIResponse "Bad request, invalid data provided"
-// @Failure 500 {object} common.APIResponse "Internal server error"
 // @Security Bearer
 // @Router /api/order [post]
 func Create(ctx *gin.Context) {
@@ -43,9 +40,6 @@ func Create(ctx *gin.Context) {
 // @Param search query string false "Search term"
 // @Param page query int false "Page number"
 // @Param limit query int false "Limit"
-// @Success 200 {object} common.APIResponse "Successfully retrieved orders"
-// @Failure 400 {object} common.APIResponse "Bad request, invalid data provided"
-// @Failure 500 {object} common.APIResponse "Internal server error"
 // @Security Bearer
 // @Router /api/orders [get]
 func GetAll(ctx *gin.Context) {
@@ -70,9 +64,6 @@ func GetAll(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param order body OrderRequest true "Order data"
-// @Success 200 {object} common.APIResponse{data=OrderRequest} "Successfully updated the order"
-// @Failure 400 {object} common.APIResponse "Bad request, invalid data provided"
-// @Failure 500 {object} common.APIResponse "Internal server error"
 // @Security Bearer
 // @Router /api/order/{id} [put]
 func Update(ctx *gin.Context) {
@@ -97,10 +88,6 @@ func Update(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path int true "Order ID"
-// @Success 200 {object} common.APIResponse "Success"
-// @Failure 400 {object} common.APIResponse "Invalid ID format"
-// @Failure 404 {object} common.APIResponse "Order not found"
-// @Failure 500 {object} common.APIResponse "Internal server error"
 // @Security Bearer
 // @Router /api/order/{id} [delete]
 func Delete(ctx *gin.Context) {
@@ -125,9 +112,6 @@ func Delete(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id query string true "ID Order"
-// @Success 200 {object} common.APIResponse "Successfully updated the order"
-// @Failure 400 {object} common.APIResponse "Bad request, invalid data provided"
-// @Failure 500 {object} common.APIResponse "Internal server error"
 // @Security Bearer
 // @Router /api/order/delivery/{id} [post]
 func Delivery(ctx *gin.Context) {
@@ -152,9 +136,6 @@ func Delivery(ctx *gin.Context) {
 // @Accept multipart/form-data
 // @Produce json
 // @Param file formData file true "Bukti Pengiriman Success"
-// @Success 200 {object} common.APIResponse "Successfully updated the order"
-// @Failure 400 {object} common.APIResponse "Bad request, invalid data provided"
-// @Failure 500 {object} common.APIResponse "Internal server error"
 // @Security Bearer
 // @Router /api/order/success/{id} [post]
 func Success(ctx *gin.Context) {
