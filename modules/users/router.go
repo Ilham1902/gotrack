@@ -18,6 +18,6 @@ func Initiator(router *gin.Engine) {
 	auth.Use(middlewares.Logging())
 	{
 		auth.POST("/track", middlewares.AuthorizeRole("owner"), Track)
-		auth.POST("", middlewares.AuthorizeRole("owner"), GetList)
+		auth.GET("", middlewares.AuthorizeRole("owner"), GetList)
 	}
 }
