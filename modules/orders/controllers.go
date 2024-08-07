@@ -17,6 +17,7 @@ import (
 // @Success 200 {object} common.APIResponse{data=OrderRequest} "Successfully created the order"
 // @Failure 400 {object} common.APIResponse "Bad request, invalid data provided"
 // @Failure 500 {object} common.APIResponse "Internal server error"
+// @Security Bearer
 // @Router /api/order [post]
 func Create(ctx *gin.Context) {
 	var (
@@ -45,6 +46,7 @@ func Create(ctx *gin.Context) {
 // @Success 200 {object} common.APIResponse "Successfully retrieved orders"
 // @Failure 400 {object} common.APIResponse "Bad request, invalid data provided"
 // @Failure 500 {object} common.APIResponse "Internal server error"
+// @Security Bearer
 // @Router /api/orders [get]
 func GetAll(ctx *gin.Context) {
 	var (
@@ -71,6 +73,7 @@ func GetAll(ctx *gin.Context) {
 // @Success 200 {object} common.APIResponse{data=OrderRequest} "Successfully updated the order"
 // @Failure 400 {object} common.APIResponse "Bad request, invalid data provided"
 // @Failure 500 {object} common.APIResponse "Internal server error"
+// @Security Bearer
 // @Router /api/order/{id} [put]
 func Update(ctx *gin.Context) {
 	var (
@@ -125,6 +128,7 @@ func Delete(ctx *gin.Context) {
 // @Success 200 {object} common.APIResponse "Successfully updated the order"
 // @Failure 400 {object} common.APIResponse "Bad request, invalid data provided"
 // @Failure 500 {object} common.APIResponse "Internal server error"
+// @Security Bearer
 // @Router /api/order/delivery/{id} [post]
 func Delivery(ctx *gin.Context) {
 	var (
@@ -151,6 +155,7 @@ func Delivery(ctx *gin.Context) {
 // @Success 200 {object} common.APIResponse "Successfully updated the order"
 // @Failure 400 {object} common.APIResponse "Bad request, invalid data provided"
 // @Failure 500 {object} common.APIResponse "Internal server error"
+// @Security Bearer
 // @Router /api/order/success/{id} [post]
 func Success(ctx *gin.Context) {
 	var (

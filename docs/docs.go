@@ -17,6 +17,11 @@ const docTemplate = `{
     "paths": {
         "/api/order": {
             "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Creates a new order with details provided in the request body.",
                 "consumes": [
                     "application/json"
@@ -75,6 +80,11 @@ const docTemplate = `{
         },
         "/api/order/delivery/{id}": {
             "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Deliverys a new order with details provided in the request body.",
                 "consumes": [
                     "application/json"
@@ -119,6 +129,11 @@ const docTemplate = `{
         },
         "/api/order/success/{id}": {
             "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Delivery Success",
                 "consumes": [
                     "multipart/form-data"
@@ -163,6 +178,11 @@ const docTemplate = `{
         },
         "/api/order/{id}": {
             "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Updates a new order with details provided in the request body.",
                 "consumes": [
                     "application/json"
@@ -274,6 +294,11 @@ const docTemplate = `{
         },
         "/api/orders": {
             "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "Get all orders with search and pagination",
                 "consumes": [
                     "application/json"
@@ -433,6 +458,11 @@ const docTemplate = `{
         },
         "/api/users/track": {
             "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "This endpoint is used for Track Employee",
                 "consumes": [
                     "application/json"

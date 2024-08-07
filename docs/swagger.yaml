@@ -127,6 +127,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/common.APIResponse'
+      security:
+      - Bearer: []
       summary: Create a new order
       tags:
       - Orders
@@ -196,6 +198,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/common.APIResponse'
+      security:
+      - Bearer: []
       summary: Update a new order
       tags:
       - Orders
@@ -225,6 +229,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/common.APIResponse'
+      security:
+      - Bearer: []
       summary: Delivery order
       tags:
       - Delivery Orders
@@ -254,6 +260,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/common.APIResponse'
+      security:
+      - Bearer: []
       summary: Delivery Success
       tags:
       - Delivery Success
@@ -290,6 +298,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/common.APIResponse'
+      security:
+      - Bearer: []
       summary: Get all orders
       tags:
       - Orders
@@ -390,6 +400,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/common.APIResponse'
+      security:
+      - Bearer: []
       summary: Track Employee
       tags:
       - Track Employee

@@ -69,6 +69,7 @@ func SignUp(ctx *gin.Context) {
 // @Success 200 {object} common.APIResponse{data=IPInfoResponse} "Success"
 // @Failure 400 {object} common.APIResponse "Bad Request"
 // @Failure 500 {object} common.APIResponse "Internal Server Error"
+// @Security Bearer
 // @Router /api/users/track [post]
 func Track(ctx *gin.Context) {
 	var (
