@@ -57,14 +57,14 @@ func GetAll(ctx *gin.Context) {
 	common.GenerateSuccessResponseWithListData(ctx, "successfully Get Order data", int64(len(data)), data)
 }
 
-// Update godoc
+// Get By ID godoc
 // @Summary Update a new order
-// @Description Updates a new order with details provided in the request body.
+// @Description Get By ID order with details provided in the request body.
 // @Tags Orders
 // @Accept json
 // @Produce json
 // @Security Bearer
-// @Router /api/order/{id} [put]
+// @Router /api/order/{id} [get]
 func GetByID(ctx *gin.Context) {
 	var (
 		orderRepo = NewRepository(database.DBConnections)

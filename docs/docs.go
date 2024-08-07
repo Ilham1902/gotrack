@@ -147,6 +147,25 @@ const docTemplate = `{
             }
         },
         "/api/order/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get By ID order with details provided in the request body.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Update a new order",
+                "responses": {}
+            },
             "put": {
                 "security": [
                     {

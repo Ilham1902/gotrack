@@ -115,6 +115,18 @@ paths:
       summary: Delete a order by ID
       tags:
       - Orders
+    get:
+      consumes:
+      - application/json
+      description: Get By ID order with details provided in the request body.
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - Bearer: []
+      summary: Update a new order
+      tags:
+      - Orders
     put:
       consumes:
       - application/json
