@@ -3,7 +3,6 @@ package orders
 import (
 	"errors"
 	"gotrack/modules/users"
-	"log"
 
 	"gorm.io/gorm"
 )
@@ -89,8 +88,6 @@ func (o *orderRepository) GetAll(role string, idUser int, search string, page in
 		query = query.Limit(limit).Offset(offset)
 	}
 
-	log.Println("Generated SQL:", query.Statement.SQL.String())
-
 	if role == "owner" {
 		if err = query.Find(&data).Error; err != nil {
 			return nil, err
@@ -106,7 +103,12 @@ func (o *orderRepository) GetAll(role string, idUser int, search string, page in
 
 // GetByID implements Repository.
 func (o *orderRepository) GetByID(id int) (Order, error) {
-	panic("unimplemented")
+	var order Order
+	err := o.db.Model(&Order{}).Where("id = ?", id).Preload("OrderDetails").Preload("Employee").First(&order).Error
+	if err != nil {
+		return Order{}, err
+	}
+	return order, nil
 }
 
 // Update implements Repository.

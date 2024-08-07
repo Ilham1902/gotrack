@@ -63,6 +63,29 @@ func GetAll(ctx *gin.Context) {
 // @Tags Orders
 // @Accept json
 // @Produce json
+// @Security Bearer
+// @Router /api/order/{id} [put]
+func GetByID(ctx *gin.Context) {
+	var (
+		orderRepo = NewRepository(database.DBConnections)
+		orderSrv  = NewService(orderRepo)
+	)
+
+	data, err := orderSrv.GetById(ctx)
+	if err != nil {
+		common.GenerateErrorResponse(ctx, err.Error())
+		return
+	}
+
+	common.GenerateSuccessResponseWithData(ctx, "successfully updated Order data", data)
+}
+
+// Update godoc
+// @Summary Update a new order
+// @Description Updates a new order with details provided in the request body.
+// @Tags Orders
+// @Accept json
+// @Produce json
 // @Param order body OrderRequestSwag true "Order data"
 // @Security Bearer
 // @Router /api/order/{id} [put]
@@ -82,7 +105,7 @@ func Update(ctx *gin.Context) {
 }
 
 // Delete godoc
-// @Tags Order
+// @Tags Orders
 // @Summary Delete a order by ID
 // @Description Remove a order from the database by its ID
 // @Accept json

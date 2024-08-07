@@ -13,6 +13,7 @@ func Initiator(router *gin.Engine) {
 	{
 		api.POST("", Create)
 		api.GET("", GetAll)
+		api.GET(":id", GetByID)
 		api.PUT(":id", middlewares.AuthorizeRole("owner"), Update)
 		api.DELETE(":id", middlewares.AuthorizeRole("owner"), Delete)
 

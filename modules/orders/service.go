@@ -126,7 +126,17 @@ func (o *orderServices) GetAll(ctx *gin.Context) (result []Order, err error) {
 
 // GetById implements Service.
 func (o *orderServices) GetById(ctx *gin.Context) (result Order, err error) {
-	panic("unimplemented")
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return Order{}, fmt.Errorf("invalid ID format")
+	}
+
+	data, err := o.repository.GetByID(id)
+	if err != nil {
+		return Order{}, err
+	}
+
+	return data, nil
 }
 
 // Update implements Service.

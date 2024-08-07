@@ -114,7 +114,7 @@ paths:
       - Bearer: []
       summary: Delete a order by ID
       tags:
-      - Order
+      - Orders
     put:
       consumes:
       - application/json
