@@ -86,7 +86,7 @@ definitions:
   users.TrackRequest:
     properties:
       user_id:
-        type: string
+        type: integer
     type: object
 host: gotrack-production-2b8d.up.railway.app
 info:

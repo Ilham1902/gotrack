@@ -138,7 +138,7 @@ func (s *SignUpRequest) ConvertToModelForSignUp() (user User, err error) {
 }
 
 type TrackRequest struct {
-	UserId string `json:"user_id"`
+	UserId uint `json:"user_id"`
 }
 
 func GetGeoLocation(ip string) (*IPInfo, error) {
