@@ -1,0 +1,146 @@
+definitions:
+  common.APIResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+      total_data:
+        type: integer
+      trace_id:
+        type: string
+    type: object
+  orders.OrderRequest:
+    type: object
+  users.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  users.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  users.SignUpRequest:
+    properties:
+      password:
+        type: string
+      re_type_password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+host: https://gotrack-production.up.railway.app/swagger/index.html
+info:
+  contact: {}
+  description: This is documentation GoTrack.
+  title: GoTrack Documentation
+  version: 1.0.0
+paths:
+  /api/order:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new order with details provided in the request body.
+      parameters:
+      - description: Order data
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/orders.OrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully created the order
+          schema:
+            $ref: '#/definitions/common.APIResponse'
+        "400":
+          description: Bad request, invalid data provided
+          schema:
+            $ref: '#/definitions/common.APIResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/common.APIResponse'
+      summary: Create a new order
+      tags:
+      - Orders
+  /api/users/login:
+    post:
+      consumes:
+      - application/json
+      description: This endpoint is used for user login
+      parameters:
+      - description: Login Request
+        in: body
+        name: loginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/users.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/users.LoginResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.APIResponse'
+      summary: User Login
+      tags:
+      - Users
+  /api/users/signup:
+    post:
+      consumes:
+      - application/json
+      description: This endpoint is used for user signup
+      parameters:
+      - description: Sign Up Request
+        in: body
+        name: signUpRequest
+        required: true
+        schema:
+          $ref: '#/definitions/users.SignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/common.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.APIResponse'
+      summary: User Signup
+      tags:
+      - Users
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

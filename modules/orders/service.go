@@ -1,0 +1,188 @@
+package orders
+
+import (
+	"errors"
+	"fmt"
+	"gotrack/helpers/common"
+	"gotrack/middlewares"
+	"net/http"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+)
+
+type Service interface {
+	Create(ctx *gin.Context) (err error)
+	GetAll(ctx *gin.Context) (result []Order, err error)
+	GetById(ctx *gin.Context) (result Order, err error)
+	Update(ctx *gin.Context) (err error)
+	Delete(ctx *gin.Context) (err error)
+}
+
+type orderServices struct {
+	repository Repository
+	validate   *validator.Validate
+}
+
+// Create implements Service.
+func (o *orderServices) Create(ctx *gin.Context) (err error) {
+	var request = OrderRequest{}
+
+	if err = ctx.BindJSON(&request); err != nil {
+		return errors.New("invalid request")
+	}
+
+	// Validate request data
+	if err = o.validate.Struct(request); err != nil {
+		return errors.New("validation failed: " + err.Error())
+	}
+
+	_, err = o.repository.FindEmployee(request.EmployeeID)
+	if err != nil {
+		return errors.New("employee not found")
+	}
+
+	order := Order{
+		EmployeeID:  request.EmployeeID,
+		Customer:    request.Customer,
+		Location:    request.Location,
+		Status:      request.Status,
+		Description: request.Description,
+		// Employee: *employee,
+	}
+
+	if err = o.repository.Create(&order); err != nil {
+		return err
+	}
+
+	for i := range request.OrderDetails {
+		request.OrderDetails[i].OrderID = int(order.ID)
+		if common.IsEmptyField(request.OrderDetails[i].Item) {
+			return errors.New("item Required")
+		}
+		if common.IsEmptyField(request.OrderDetails[i].Qty) {
+			return errors.New("qty Required")
+		}
+	}
+
+	if err = o.repository.CreateOrderDetails(request.OrderDetails); err != nil {
+		o.repository.Delete(int(order.ID))
+		return err
+	}
+
+	return
+}
+
+// Delete implements Service.
+func (o *orderServices) Delete(ctx *gin.Context) (err error) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return fmt.Errorf("invalid ID format")
+	}
+
+	var orderReq OrderRequest
+
+	err = ctx.ShouldBind(&orderReq)
+	if err != nil {
+		return
+	}
+
+	if err = o.repository.Delete(id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// GetAll implements Service.
+func (o *orderServices) GetAll(ctx *gin.Context) (result []Order, err error) {
+	var request struct {
+		Search string `json:"search"`
+		Page   int    `json:"page"`
+		Limit  int    `json:"limit"`
+	}
+
+	if err = ctx.BindJSON(&request); err != nil {
+		common.GenerateErrorResponse(ctx, "Invalid request")
+		return
+	}
+
+	user, exists := ctx.Get("auth")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		ctx.Abort()
+		return
+	}
+
+	loginData, ok := user.(middlewares.UserLoginRedis)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user data"})
+		ctx.Abort()
+		return
+	}
+
+	return o.repository.GetAll(loginData.Role, int(loginData.UserId), request.Search, request.Page, request.Limit)
+}
+
+// GetById implements Service.
+func (o *orderServices) GetById(ctx *gin.Context) (result Order, err error) {
+	panic("unimplemented")
+}
+
+// Update implements Service.
+func (o *orderServices) Update(ctx *gin.Context) error {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return fmt.Errorf("invalid ID format")
+	}
+
+	var request OrderRequest
+	if err = ctx.BindJSON(&request); err != nil {
+		return errors.New("invalid request")
+	}
+
+	// Validate request data
+	if err = o.validate.Struct(request); err != nil {
+		return errors.New("validation failed: " + err.Error())
+	}
+
+	_, err = o.repository.FindEmployee(request.EmployeeID)
+	if err != nil {
+		return errors.New("employee not found")
+	}
+
+	order := Order{
+		EmployeeID:  request.EmployeeID,
+		Customer:    request.Customer,
+		Location:    request.Location,
+		Status:      request.Status,
+		Description: request.Description,
+	}
+
+	// Convert OrderRequest details to OrderDetail
+	var details []OrderDetail
+	for _, detail := range request.OrderDetails {
+		if common.IsEmptyField(detail.Item) {
+			return errors.New("item required")
+		}
+		if common.IsEmptyField(detail.Qty) {
+			return errors.New("qty required")
+		}
+		detail.OrderID = id
+		details = append(details, detail)
+	}
+
+	if err = o.repository.Update(order, id, details); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func NewService(repository Repository) Service {
+	return &orderServices{
+		repository,
+		validator.New(),
+	}
+}
