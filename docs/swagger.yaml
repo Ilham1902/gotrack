@@ -36,6 +36,30 @@ definitions:
       status:
         type: string
     type: object
+  users.IPInfoResponse:
+    properties:
+      city:
+        type: string
+      country:
+        type: string
+      hostname:
+        type: string
+      ip:
+        type: string
+      loc:
+        description: 'Format: "latitude,longitude"'
+        type: string
+      org:
+        type: string
+      postal:
+        type: string
+      region:
+        type: string
+      timezone:
+        type: string
+      user_id:
+        type: integer
+    type: object
   users.LoginRequest:
     properties:
       password:
@@ -59,7 +83,12 @@ definitions:
       username:
         type: string
     type: object
-host: https://gotrack-production.up.railway.app/swagger/index.html
+  users.TrackRequest:
+    properties:
+      user_id:
+        type: string
+    type: object
+host: https://gotrack-production-2b8d.up.railway.app
 info:
   contact: {}
   description: This is documentation GoTrack.
@@ -329,6 +358,41 @@ paths:
       summary: User Signup
       tags:
       - Users
+  /api/users/track:
+    post:
+      consumes:
+      - application/json
+      description: This endpoint is used for Track Employee
+      parameters:
+      - description: Sign Up Request
+        in: body
+        name: TrackRequest
+        required: true
+        schema:
+          $ref: '#/definitions/users.TrackRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/users.IPInfoResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.APIResponse'
+      summary: Track Employee
+      tags:
+      - Track Employee
 securityDefinitions:
   Bearer:
     in: header

@@ -430,6 +430,64 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/users/track": {
+            "post": {
+                "description": "This endpoint is used for Track Employee",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Track Employee"
+                ],
+                "summary": "Track Employee",
+                "parameters": [
+                    {
+                        "description": "Sign Up Request",
+                        "name": "TrackRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/users.TrackRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/common.APIResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/users.IPInfoResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/common.APIResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/common.APIResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -489,6 +547,42 @@ const docTemplate = `{
                 }
             }
         },
+        "users.IPInfoResponse": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "hostname": {
+                    "type": "string"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "loc": {
+                    "description": "Format: \"latitude,longitude\"",
+                    "type": "string"
+                },
+                "org": {
+                    "type": "string"
+                },
+                "postal": {
+                    "type": "string"
+                },
+                "region": {
+                    "type": "string"
+                },
+                "timezone": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "users.LoginRequest": {
             "type": "object",
             "properties": {
@@ -524,6 +618,14 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "users.TrackRequest": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "string"
+                }
+            }
         }
     },
     "securityDefinitions": {
@@ -538,7 +640,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.0",
-	Host:             "https://gotrack-production.up.railway.app/swagger/index.html",
+	Host:             "https://gotrack-production-2b8d.up.railway.app",
 	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "GoTrack Documentation",

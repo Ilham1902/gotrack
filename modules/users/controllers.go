@@ -66,7 +66,7 @@ func SignUp(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param TrackRequest body TrackRequest true "Sign Up Request"
-// @Success 200 {object} common.APIResponse{data=IPInfo} "Success"
+// @Success 200 {object} common.APIResponse{data=IPInfoResponse} "Success"
 // @Failure 400 {object} common.APIResponse "Bad Request"
 // @Failure 500 {object} common.APIResponse "Internal Server Error"
 // @Router /api/users/track [post]

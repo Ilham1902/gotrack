@@ -42,6 +42,19 @@ func (IPInfo) TableName() string {
 	return "ip_info"
 }
 
+type IPInfoResponse struct {
+	IP       string `json:"ip"`
+	Hostname string `json:"hostname"`
+	City     string `json:"city"`
+	Region   string `json:"region"`
+	Country  string `json:"country"`
+	Loc      string `json:"loc"` // Format: "latitude,longitude"
+	Org      string `json:"org"`
+	Postal   string `json:"postal"`
+	Timezone string `json:"timezone"`
+	UserID   uint   `json:"user_id"`
+}
+
 type DetailLocation struct {
 	gorm.Model
 	IpID     int    `json:"ip_id" gorm:"column:ip_id"`
