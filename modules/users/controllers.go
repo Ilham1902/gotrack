@@ -102,3 +102,27 @@ func GetList(ctx *gin.Context) {
 
 	common.GenerateSuccessResponseWithListData(ctx, "successfully Get User data", int64(len(data)), data)
 }
+
+// GetByID godoc
+// @Summary Get By ID order
+// @Description Get By ID order with details provided in the request body.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id path int true "User ID"
+// @Security Bearer
+// @Router /api/users/{id} [get]
+func GetByID(ctx *gin.Context) {
+	var (
+		userRepo = NewRepository(database.DBConnections)
+		userSrv  = NewService(userRepo)
+	)
+
+	data, err := userSrv.FindByID(ctx)
+	if err != nil {
+		common.GenerateErrorResponse(ctx, err.Error())
+		return
+	}
+
+	common.GenerateSuccessResponseWithData(ctx, "successfully Get User data", data)
+}

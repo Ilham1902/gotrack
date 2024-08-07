@@ -19,5 +19,6 @@ func Initiator(router *gin.Engine) {
 	{
 		auth.POST("/track", middlewares.AuthorizeRole("owner"), Track)
 		auth.GET("", middlewares.AuthorizeRole("owner"), GetList)
+		auth.GET(":id", middlewares.AuthorizeRole("owner"), GetByID)
 	}
 }

@@ -78,7 +78,7 @@ func GetByID(ctx *gin.Context) {
 		return
 	}
 
-	common.GenerateSuccessResponseWithData(ctx, "successfully updated Order data", data)
+	common.GenerateSuccessResponseWithData(ctx, "successfully Get Order data", data)
 }
 
 // Update godoc
