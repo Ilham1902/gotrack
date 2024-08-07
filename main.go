@@ -20,7 +20,7 @@ var (
 // @title GoTrack Documentation
 // @version 1.0.0
 // @description This is documentation GoTrack.
-// @host https://gotrack-production.up.railway.app/swagger/index.html
+// @host https://gotrack-production-2b8d.up.railway.app
 
 // @securityDefinitions.apikey Bearer
 // @in header
