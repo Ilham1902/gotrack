@@ -41,7 +41,7 @@ func Create(ctx *gin.Context) {
 // @Param page query int false "Page number"
 // @Param limit query int false "Limit"
 // @Security Bearer
-// @Router /api/orders [get]
+// @Router /api/order [get]
 func GetAll(ctx *gin.Context) {
 	var (
 		orderRepo = NewRepository(database.DBConnections)

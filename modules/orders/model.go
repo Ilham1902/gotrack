@@ -32,7 +32,6 @@ type OrderRequestSwag struct {
 	EmployeeID   int               `json:"employee_id"`
 	Customer     string            `json:"customer"`
 	Location     string            `json:"location"`
-	Status       string            `json:"status"`
 	Description  string            `json:"description"`
 	OrderDetails []OrderDetailSwag `json:"order_details"`
 }

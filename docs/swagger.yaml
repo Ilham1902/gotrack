@@ -20,8 +20,6 @@ definitions:
         items:
           $ref: '#/definitions/orders.OrderDetailSwag'
         type: array
-      status:
-        type: string
     type: object
   users.LoginRequest:
     properties:
@@ -54,6 +52,31 @@ info:
   version: 1.0.0
 paths:
   /api/order:
+    get:
+      consumes:
+      - application/json
+      description: Get all orders with search and pagination
+      parameters:
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - Bearer: []
+      summary: Get all orders
+      tags:
+      - Orders
     post:
       consumes:
       - application/json
@@ -149,32 +172,6 @@ paths:
       summary: Delivery Success
       tags:
       - Delivery Success
-  /api/orders:
-    get:
-      consumes:
-      - application/json
-      description: Get all orders with search and pagination
-      parameters:
-      - description: Search term
-        in: query
-        name: search
-        type: string
-      - description: Page number
-        in: query
-        name: page
-        type: integer
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      produces:
-      - application/json
-      responses: {}
-      security:
-      - Bearer: []
-      summary: Get all orders
-      tags:
-      - Orders
   /api/users/login:
     post:
       consumes:

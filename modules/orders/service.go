@@ -53,8 +53,8 @@ func (o *orderServices) Create(ctx *gin.Context) (err error) {
 		EmployeeID:  request.EmployeeID,
 		Customer:    request.Customer,
 		Location:    request.Location,
-		Status:      request.Status,
 		Description: request.Description,
+		Status:      "Pending",
 		// Employee: *employee,
 	}
 
