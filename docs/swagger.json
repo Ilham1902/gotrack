@@ -6,7 +6,7 @@
         "contact": {},
         "version": "1.0.0"
     },
-    "host": "https://gotrack-production-2b8d.up.railway.app",
+    "host": "gotrack-production-2b8d.up.railway.app",
     "paths": {
         "/api/order": {
             "post": {

@@ -88,7 +88,7 @@ definitions:
       user_id:
         type: string
     type: object
-host: https://gotrack-production-2b8d.up.railway.app
+host: gotrack-production-2b8d.up.railway.app
 info:
   contact: {}
   description: This is documentation GoTrack.
