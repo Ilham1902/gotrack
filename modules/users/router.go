@@ -11,6 +11,12 @@ func Initiator(router *gin.Engine) {
 	{
 		api.POST("/login", Login)
 		api.POST("/signup", SignUp)
-		api.POST("/track", middlewares.AuthorizeRole("owner"), Track)
+	}
+
+	auth := router.Group("/api/users")
+	auth.Use(middlewares.JwtMiddleware())
+	auth.Use(middlewares.Logging())
+	{
+		auth.POST("/track", middlewares.AuthorizeRole("owner"), Track)
 	}
 }
