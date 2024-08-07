@@ -2,8 +2,10 @@ package users
 
 import (
 	"errors"
+	"fmt"
 	"gotrack/helpers/common"
 	"gotrack/middlewares"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -12,6 +14,8 @@ import (
 type Service interface {
 	LoginService(ctx *gin.Context) (result LoginResponse, err error)
 	SignUpService(ctx *gin.Context) (err error)
+	FindByID(ctx *gin.Context) (user User, err error)
+	GetAll(ctx *gin.Context) (result []User, err error)
 	Track(ctx *gin.Context) (*IPInfo, error)
 }
 
@@ -109,8 +113,27 @@ func (service *UserService) SignUpService(ctx *gin.Context) (err error) {
 	return nil
 }
 
-func (s *UserService) FindByID(id int) (User, error) {
-	return s.repository.FindByID(uint(id))
+// GetAll implements Service.
+func (service *UserService) GetAll(ctx *gin.Context) (result []User, err error) {
+	search := ctx.Query("search")
+	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))    // Default to page 1
+	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10")) // Default to limit 10
+
+	return service.repository.GetAll(search, page, limit)
+}
+
+func (service *UserService) FindByID(ctx *gin.Context) (User, error) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return User{}, fmt.Errorf("invalid ID format")
+	}
+
+	data, err := service.repository.FindByID(uint(id))
+	if err != nil {
+		return User{}, err
+	}
+
+	return data, nil
 }
 
 // Track implements Service.

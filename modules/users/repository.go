@@ -11,7 +11,7 @@ type Repository interface {
 	SignUp(user User) (err error)
 	Update(user User) (err error)
 	Delete(user User) (err error)
-	GetList() (users []User, err error)
+	GetAll(search string, page int, limit int) (users []User, err error)
 	FindByID(id uint) (User, error)
 	UpdateIPEmployee(userID uint, ipAddress string) error
 	TrackEmployeeLocation(userID uint, ipAddress string) (geolocation IPInfo, err error)
@@ -72,11 +72,26 @@ func (r *userRepository) Delete(user User) (err error) {
 	return nil
 }
 
-func (r *userRepository) GetList() (users []User, err error) {
-	if err := r.db.Find(&users).Error; err != nil {
+func (r *userRepository) GetAll(search string, page int, limit int) (users []User, err error) {
+	var data []User
+	query := r.db.Model(&User{})
+
+	if search != "" {
+		query = query.Where("username LIKE ? OR role LIKE ?",
+			"%"+search+"%", "%"+search+"%")
+	}
+
+	// Paginasi
+	if page > 0 && limit > 0 {
+		offset := (page - 1) * limit
+		query = query.Limit(limit).Offset(offset)
+	}
+
+	if err = query.Find(&data).Error; err != nil {
 		return nil, err
 	}
-	return users, nil
+
+	return data, nil
 }
 
 func (r *userRepository) FindByID(id uint) (user User, err error) {

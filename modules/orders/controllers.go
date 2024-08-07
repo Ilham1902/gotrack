@@ -57,12 +57,13 @@ func GetAll(ctx *gin.Context) {
 	common.GenerateSuccessResponseWithListData(ctx, "successfully Get Order data", int64(len(data)), data)
 }
 
-// Get By ID godoc
-// @Summary Update a new order
+// GetByID godoc
+// @Summary Get By ID order
 // @Description Get By ID order with details provided in the request body.
 // @Tags Orders
 // @Accept json
 // @Produce json
+// @Param id path int true "Order ID"
 // @Security Bearer
 // @Router /api/order/{id} [get]
 func GetByID(ctx *gin.Context) {

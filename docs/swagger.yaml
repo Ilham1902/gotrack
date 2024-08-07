@@ -119,12 +119,18 @@ paths:
       consumes:
       - application/json
       description: Get By ID order with details provided in the request body.
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses: {}
       security:
       - Bearer: []
-      summary: Update a new order
+      summary: Get By ID order
       tags:
       - Orders
     put:
@@ -184,6 +190,32 @@ paths:
       summary: Delivery Success
       tags:
       - Delivery Success
+  /api/users:
+    get:
+      consumes:
+      - application/json
+      description: Get all users with search and pagination
+      parameters:
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - Bearer: []
+      summary: Get all users
+      tags:
+      - Users
   /api/users/login:
     post:
       consumes:
@@ -239,7 +271,7 @@ paths:
       - Bearer: []
       summary: Track Employee
       tags:
-      - Track Employee
+      - Users
 securityDefinitions:
   Bearer:
     in: header

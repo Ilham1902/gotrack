@@ -54,7 +54,7 @@ func SignUp(ctx *gin.Context) {
 }
 
 // Track Employee godoc
-// @Tags Track Employee
+// @Tags Users
 // @Summary Track Employee
 // @Description This endpoint is used for Track Employee
 // @Accept json
@@ -75,4 +75,30 @@ func Track(ctx *gin.Context) {
 	}
 
 	common.GenerateSuccessResponseWithData(ctx, "awesome, successfully create user", data)
+}
+
+// GetAllUser godoc
+// @Summary Get all users
+// @Description Get all users with search and pagination
+// @Tags Users
+// @Accept  json
+// @Produce  json
+// @Param search query string false "Search term"
+// @Param page query int false "Page number"
+// @Param limit query int false "Limit"
+// @Security Bearer
+// @Router /api/users [get]
+func GetList(ctx *gin.Context) {
+	var (
+		userrRepo = NewRepository(database.DBConnections)
+		userrSrv  = NewService(userrRepo)
+	)
+
+	data, err := userrSrv.GetAll(ctx)
+	if err != nil {
+		common.GenerateErrorResponse(ctx, err.Error())
+		return
+	}
+
+	common.GenerateSuccessResponseWithListData(ctx, "successfully Get User data", int64(len(data)), data)
 }

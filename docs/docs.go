@@ -163,7 +163,16 @@ const docTemplate = `{
                 "tags": [
                     "Orders"
                 ],
-                "summary": "Update a new order",
+                "summary": "Get By ID order",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {}
             },
             "put": {
@@ -220,6 +229,47 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/api/users": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get all users with search and pagination",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get all users",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
                     }
                 ],
                 "responses": {}
@@ -294,7 +344,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Track Employee"
+                    "Users"
                 ],
                 "summary": "Track Employee",
                 "parameters": [
