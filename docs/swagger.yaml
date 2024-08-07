@@ -1,15 +1,12 @@
 definitions:
-  orders.OrderDetail:
+  orders.OrderDetailSwag:
     properties:
       item:
         type: string
-      order_id:
-        description: gorm.Model
-        type: integer
       qty:
         type: integer
     type: object
-  orders.OrderRequest:
+  orders.OrderRequestSwag:
     properties:
       customer:
         type: string
@@ -21,7 +18,7 @@ definitions:
         type: string
       order_details:
         items:
-          $ref: '#/definitions/orders.OrderDetail'
+          $ref: '#/definitions/orders.OrderDetailSwag'
         type: array
       status:
         type: string
@@ -67,7 +64,7 @@ paths:
         name: order
         required: true
         schema:
-          $ref: '#/definitions/orders.OrderRequest'
+          $ref: '#/definitions/orders.OrderRequestSwag'
       produces:
       - application/json
       responses: {}
@@ -105,7 +102,7 @@ paths:
         name: order
         required: true
         schema:
-          $ref: '#/definitions/orders.OrderRequest'
+          $ref: '#/definitions/orders.OrderRequestSwag'
       produces:
       - application/json
       responses: {}

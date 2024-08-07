@@ -13,7 +13,7 @@ import (
 // @Tags Orders
 // @Accept json
 // @Produce json
-// @Param order body OrderRequest true "Order data"
+// @Param order body OrderRequestSwag true "Order data"
 // @Security Bearer
 // @Router /api/order [post]
 func Create(ctx *gin.Context) {
@@ -63,7 +63,7 @@ func GetAll(ctx *gin.Context) {
 // @Tags Orders
 // @Accept json
 // @Produce json
-// @Param order body OrderRequest true "Order data"
+// @Param order body OrderRequestSwag true "Order data"
 // @Security Bearer
 // @Router /api/order/{id} [put]
 func Update(ctx *gin.Context) {

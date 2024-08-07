@@ -40,7 +40,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/orders.OrderRequest"
+                            "$ref": "#/definitions/orders.OrderRequestSwag"
                         }
                     }
                 ],
@@ -132,7 +132,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/orders.OrderRequest"
+                            "$ref": "#/definitions/orders.OrderRequestSwag"
                         }
                     }
                 ],
@@ -296,22 +296,18 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "orders.OrderDetail": {
+        "orders.OrderDetailSwag": {
             "type": "object",
             "properties": {
                 "item": {
                     "type": "string"
-                },
-                "order_id": {
-                    "description": "gorm.Model",
-                    "type": "integer"
                 },
                 "qty": {
                     "type": "integer"
                 }
             }
         },
-        "orders.OrderRequest": {
+        "orders.OrderRequestSwag": {
             "type": "object",
             "properties": {
                 "customer": {
@@ -329,7 +325,7 @@ const docTemplate = `{
                 "order_details": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/orders.OrderDetail"
+                        "$ref": "#/definitions/orders.OrderDetailSwag"
                     }
                 },
                 "status": {

@@ -28,6 +28,20 @@ func (Order) TableName() string {
 	return "orders"
 }
 
+type OrderRequestSwag struct {
+	EmployeeID   int               `json:"employee_id"`
+	Customer     string            `json:"customer"`
+	Location     string            `json:"location"`
+	Status       string            `json:"status"`
+	Description  string            `json:"description"`
+	OrderDetails []OrderDetailSwag `json:"order_details"`
+}
+
+type OrderDetailSwag struct {
+	Item string `json:"item"`
+	Qty  int    `json:"qty"`
+}
+
 type OrderRequest struct {
 	EmployeeID   int           `json:"employee_id"`
 	Customer     string        `json:"customer"`
@@ -38,7 +52,7 @@ type OrderRequest struct {
 }
 
 type OrderDetail struct {
-	// gorm.Model
+	gorm.Model
 	OrderID int    `json:"order_id" gorm:"column:order_id"`
 	Item    string `json:"item"`
 	Qty     int    `json:"qty"`
