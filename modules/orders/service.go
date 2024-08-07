@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"gotrack/helpers/common"
 	"gotrack/middlewares"
+	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +21,9 @@ type Service interface {
 	GetById(ctx *gin.Context) (result Order, err error)
 	Update(ctx *gin.Context) (err error)
 	Delete(ctx *gin.Context) (err error)
+
+	Delivery(ctx *gin.Context) (err error)
+	Success(ctx *gin.Context) (err error)
 }
 
 type orderServices struct {
@@ -97,16 +103,9 @@ func (o *orderServices) Delete(ctx *gin.Context) (err error) {
 
 // GetAll implements Service.
 func (o *orderServices) GetAll(ctx *gin.Context) (result []Order, err error) {
-	var request struct {
-		Search string `json:"search"`
-		Page   int    `json:"page"`
-		Limit  int    `json:"limit"`
-	}
-
-	if err = ctx.BindJSON(&request); err != nil {
-		common.GenerateErrorResponse(ctx, "Invalid request")
-		return
-	}
+	search := ctx.Query("search")
+	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))    // Default to page 1
+	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10")) // Default to limit 10
 
 	user, exists := ctx.Get("auth")
 	if !exists {
@@ -122,7 +121,7 @@ func (o *orderServices) GetAll(ctx *gin.Context) (result []Order, err error) {
 		return
 	}
 
-	return o.repository.GetAll(loginData.Role, int(loginData.UserId), request.Search, request.Page, request.Limit)
+	return o.repository.GetAll(loginData.Role, int(loginData.UserId), search, page, limit)
 }
 
 // GetById implements Service.
@@ -178,6 +177,61 @@ func (o *orderServices) Update(ctx *gin.Context) error {
 	}
 
 	return nil
+}
+
+func (o *orderServices) Delivery(ctx *gin.Context) error {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return fmt.Errorf("invalid ID format")
+	}
+
+	if err := o.repository.Delivery(id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Success implements Service.
+func (o *orderServices) Success(ctx *gin.Context) (err error) {
+	// Parse the form data
+	if err = ctx.Request.ParseMultipartForm(5 << 20); err != nil {
+		return errors.New("unable to parse form")
+	}
+
+	// Get the file from the form input
+	file, header, err := ctx.Request.FormFile("file")
+	if err != nil {
+		return errors.New("unable to get file from form")
+	}
+	defer file.Close()
+
+	// Hash the file name
+	fileName := HashFilename(header.Filename)
+
+	// Save the file to the public folder
+	publicDir := "./public"
+	if err = os.MkdirAll(publicDir, os.ModePerm); err != nil {
+		return errors.New("unable to create public directory")
+	}
+	dst, err := os.Create(filepath.Join(publicDir, fileName))
+	if err != nil {
+		return errors.New("unable to create file on server")
+	}
+	defer dst.Close()
+
+	if _, err = io.Copy(dst, file); err != nil {
+		return errors.New("unable to save file")
+	}
+
+	// Get IP address of the requester
+	ip := ctx.ClientIP()
+
+	if err := o.repository.Success(ip, fileName); err != nil {
+		return err
+	}
+
+	return
 }
 
 func NewService(repository Repository) Service {

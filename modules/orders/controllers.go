@@ -114,3 +114,55 @@ func Delete(ctx *gin.Context) {
 
 	common.GenerateSuccessResponse(ctx, "successfully delete order")
 }
+
+// Delivery godoc
+// @Summary Delivery order
+// @Description Deliverys a new order with details provided in the request body.
+// @Tags Delivery Orders
+// @Accept json
+// @Produce json
+// @Param id query string true "ID Order"
+// @Success 200 {object} common.APIResponse "Successfully updated the order"
+// @Failure 400 {object} common.APIResponse "Bad request, invalid data provided"
+// @Failure 500 {object} common.APIResponse "Internal server error"
+// @Router /api/order/delivery/{id} [post]
+func Delivery(ctx *gin.Context) {
+	var (
+		orderRepo = NewRepository(database.DBConnections)
+		orderSrv  = NewService(orderRepo)
+	)
+
+	err := orderSrv.Delivery(ctx)
+	if err != nil {
+		common.GenerateErrorResponse(ctx, err.Error())
+		return
+	}
+
+	common.GenerateSuccessResponse(ctx, "successfully delivery order data")
+}
+
+// Delivery Success godoc
+// @Summary Delivery Success
+// @Description Delivery Success
+// @Tags Delivery Success
+// @Accept multipart/form-data
+// @Produce json
+// @Param file formData file true "Bukti Pengiriman Success"
+// @Success 200 {object} common.APIResponse "Successfully updated the order"
+// @Failure 400 {object} common.APIResponse "Bad request, invalid data provided"
+// @Failure 500 {object} common.APIResponse "Internal server error"
+// @Router /api/order/success/{id} [post]
+func Success(ctx *gin.Context) {
+	var (
+		orderRepo = NewRepository(database.DBConnections)
+		orderSrv  = NewService(orderRepo)
+	)
+
+	err := orderSrv.Success(ctx)
+	if err != nil {
+		common.GenerateErrorResponse(ctx, err.Error())
+		return
+	}
+
+	common.GenerateSuccessResponse(ctx, "data is successfully")
+}

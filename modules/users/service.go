@@ -12,6 +12,7 @@ import (
 type Service interface {
 	LoginService(ctx *gin.Context) (result LoginResponse, err error)
 	SignUpService(ctx *gin.Context) (err error)
+	Track(ctx *gin.Context) (*IPInfo, error)
 }
 
 type UserService struct {
@@ -110,4 +111,27 @@ func (service *UserService) SignUpService(ctx *gin.Context) (err error) {
 
 func (s *UserService) FindByID(id int) (User, error) {
 	return s.repository.FindByID(uint(id))
+}
+
+// Track implements Service.
+func (service *UserService) Track(ctx *gin.Context) (*IPInfo, error) {
+	var request struct {
+		UserID uint `json:"user_id" binding:"required"`
+	}
+	if err := ctx.BindJSON(&request); err != nil {
+		return nil, errors.New("invalid request")
+	}
+
+	user, err := service.repository.FindByID(request.UserID)
+	if err != nil {
+		return nil, errors.New("id employee tidak ditemukan")
+	}
+
+	geoLocation, err := GetGeoLocation(user.IP)
+	if err != nil {
+		return nil, errors.New("failed to get geo location")
+	}
+
+	geoLocation.UserID = user.ID
+	return geoLocation, nil
 }

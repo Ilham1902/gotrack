@@ -1,8 +1,12 @@
 package users
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"gotrack/helpers/common"
+	"io"
+	"net/http"
 	"regexp"
 
 	"gorm.io/gorm"
@@ -40,8 +44,8 @@ func (IPInfo) TableName() string {
 
 type DetailLocation struct {
 	gorm.Model
-	IpID int `json:"ip_id" gorm:"column:ip_id"`
-
+	IpID     int    `json:"ip_id" gorm:"column:ip_id"`
+	Pict     string `json:"bukti_pengiriman"`
 	Location IPInfo `gorm:"foreignKey:IpID; references:ID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
@@ -118,4 +122,34 @@ func (s *SignUpRequest) ConvertToModelForSignUp() (user User, err error) {
 		Password: hashedPassword,
 		Role:     s.Role,
 	}, nil
+}
+
+type TrackRequest struct {
+	UserId string `json:"user_id"`
+}
+
+func GetGeoLocation(ip string) (*IPInfo, error) {
+	url := fmt.Sprintf("https://ipinfo.io/%s/json", ip)
+	response, err := http.Get(url)
+	if err != nil {
+		return nil, fmt.Errorf("failed to make request: %v", err)
+	}
+	defer response.Body.Close()
+
+	// Periksa status kode HTTP
+	if response.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("unexpected status code: %d", response.StatusCode)
+	}
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read response body: %v", err)
+	}
+
+	var geoLocation IPInfo
+	if err := json.Unmarshal(body, &geoLocation); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal response body: %v", err)
+	}
+
+	return &geoLocation, nil
 }

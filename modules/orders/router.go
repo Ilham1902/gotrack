@@ -12,10 +12,11 @@ func Initiator(router *gin.Engine) {
 	api.Use(middlewares.Logging())
 	{
 		api.POST("", Create)
-		api.POST("/list", GetAll)
+		api.GET("/list", GetAll)
 		api.PUT(":id", middlewares.AuthorizeRole("owner"), Update)
 		api.DELETE(":id", middlewares.AuthorizeRole("owner"), Delete)
 
-		// api.POST(":id", middlewares.AuthorizeRole("owner"), Delete)
+		api.POST("/delivery/:id", middlewares.AuthorizeRole("employee"), Delivery)
+		api.POST("/success/:id", middlewares.AuthorizeRole("employee"), Success)
 	}
 }

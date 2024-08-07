@@ -14,6 +14,7 @@ type Repository interface {
 	GetList() (users []User, err error)
 	FindByID(id uint) (User, error)
 	UpdateIPEmployee(userID uint, ipAddress string) error
+	TrackEmployeeLocation(userID uint, ipAddress string) (geolocation IPInfo, err error)
 }
 
 type userRepository struct {
@@ -88,4 +89,9 @@ func (r *userRepository) FindByID(id uint) (user User, err error) {
 
 func (r *userRepository) UpdateIPEmployee(userID uint, ipAddress string) error {
 	return r.db.Model(&User{}).Where("id = ?", userID).Update("ip", ipAddress).Error
+}
+
+// TrackEmployeeLocation implements Repository.
+func (r *userRepository) TrackEmployeeLocation(userID uint, ipAddress string) (geolocation IPInfo, err error) {
+	panic("unimplemented")
 }

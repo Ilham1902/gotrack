@@ -1,7 +1,13 @@
 package orders
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
 	"gotrack/modules/users"
+	"net/http"
+	"path/filepath"
 
 	"gorm.io/gorm"
 )
@@ -32,7 +38,7 @@ type OrderRequest struct {
 }
 
 type OrderDetail struct {
-	gorm.Model
+	// gorm.Model
 	OrderID int    `json:"order_id" gorm:"column:order_id"`
 	Item    string `json:"item"`
 	Qty     int    `json:"qty"`
@@ -57,4 +63,24 @@ type OrderHistory struct {
 
 func (OrderHistory) TableName() string {
 	return "order_history"
+}
+
+func HashFilename(filename string) string {
+	hash := sha256.New()
+	hash.Write([]byte(filename))
+	return hex.EncodeToString(hash.Sum(nil)) + filepath.Ext(filename)
+}
+
+func getIPInfo(ip string) (*users.IPInfo, error) {
+	resp, err := http.Get(fmt.Sprintf("https://ipinfo.io/%s/json", ip))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var info users.IPInfo
+	if err := json.NewDecoder(resp.Body).Decode(&info); err != nil {
+		return nil, err
+	}
+	return &info, nil
 }

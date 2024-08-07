@@ -14,8 +14,8 @@ type APIResponse struct {
 }
 
 type AdditionalInfo struct {
-	TotalData int64  `json:"total_data"`
-	TraceId   string `json:"trace_id"`
+	TotalData int64 `json:"total_data"`
+	// TraceId   string `json:"trace_id"`
 }
 
 func GenerateSuccessResponse(ctx *gin.Context, message string) {
