@@ -160,7 +160,16 @@ func (o *orderRepository) Update(order Order, id int, details []OrderDetail) err
 
 // Delivery implements Repository.
 func (o *orderRepository) Delivery(id int) error {
-	// Update order
+	var order Order
+
+	if err := o.db.Select("Status").First(&order, id).Error; err != nil {
+		return errors.New("data order tidak ditemukan")
+	}
+
+	if order.Status != "Pending" {
+		return errors.New("status harus pending")
+	}
+
 	if err := o.db.Model(&Order{}).Where("id = ?", id).Update("Status", "Delivery").Error; err != nil {
 		return err
 	}
@@ -170,43 +179,52 @@ func (o *orderRepository) Delivery(id int) error {
 
 // Success implements Repository.
 func (o *orderRepository) Success(id int, ip string, filename string) error {
-	// Get IP info from IPinfo
+	var order Order
+
+	if err := o.db.Select("Status").First(&order, id).Error; err != nil {
+		return errors.New("data order tidak ditemukan")
+	}
+
+	if order.Status != "Delivery" {
+		return errors.New("status harus delivery")
+	}
+
 	ipInfo, err := getIPInfo(ip)
 	if err != nil {
 		return errors.New("unable to get IP info")
 	}
 
-	// Save IP info to the database
-	if err := o.db.Create(&users.IPInfo{
-		IP:       ipInfo.IP,
-		Hostname: ipInfo.Hostname,
-		City:     ipInfo.City,
-		Region:   ipInfo.Region,
-		Country:  ipInfo.Country,
-		Loc:      ipInfo.Loc,
-		Org:      ipInfo.Org,
-		Postal:   ipInfo.Postal,
-		Timezone: ipInfo.Timezone,
-	}).Error; err != nil {
-		return errors.New("unable to save IP info")
-	}
+	return o.db.Transaction(func(tx *gorm.DB) error {
+		ipRecord := &users.IPInfo{
+			IP:       ipInfo.IP,
+			Hostname: ipInfo.Hostname,
+			City:     ipInfo.City,
+			Region:   ipInfo.Region,
+			Country:  ipInfo.Country,
+			Loc:      ipInfo.Loc,
+			Org:      ipInfo.Org,
+			Postal:   ipInfo.Postal,
+			Timezone: ipInfo.Timezone,
+		}
+		if err := tx.Create(ipRecord).Error; err != nil {
+			return errors.New("unable to save IP info")
+		}
 
-	// Save detail location with hashed file name
-	ipInfoRecord := users.IPInfo{}
-	o.db.Last(&ipInfoRecord)
-	if err := o.db.Create(&users.DetailLocation{
-		IpID:    int(ipInfoRecord.ID),
-		OrderID: int(id),
-		Pict:    filename,
-	}).Error; err != nil {
-		return errors.New("unable to save detail location")
-	}
+		detailLocation := &users.DetailLocation{
+			IpID:    int(ipRecord.ID),
+			OrderID: id,
+			Pict:    filename,
+		}
+		if err := tx.Create(detailLocation).Error; err != nil {
+			return errors.New("unable to save detail location")
+		}
 
-	if err := o.db.Model(&Order{}).Where("id = ?", id).Update("Status", "Success").Error; err != nil {
-		return err
-	}
+		if err := tx.Model(&Order{}).Where("id = ?", id).Update("Status", "Success").Error; err != nil {
+			return err
+		}
 
-	return nil
+		return nil
+	})
 }
 
 func NewRepository(database *gorm.DB) Repository {
