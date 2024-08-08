@@ -20,13 +20,26 @@ type Order struct {
 	Status      string `json:"status"` // "pending" or "completed"
 	Description string `json:"description"`
 
-	Employee       users.User           `gorm:"foreignKey:EmployeeID; references:ID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	OrderDetails   []OrderDetail        `json:"order_details" gorm:"foreignKey:OrderID"`
-	DetailLocation users.DetailLocation `json:"detail_location" gorm:"foreignKey:OrderID"`
+	Employee       users.User            `gorm:"foreignKey:EmployeeID; references:ID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	OrderDetails   []OrderDetail         `json:"order_details" gorm:"foreignKey:OrderID"`
+	DetailLocation *users.DetailLocation `json:"detail_location" gorm:"foreignKey:OrderID"`
 }
 
 func (Order) TableName() string {
 	return "orders"
+}
+
+func (o Order) MarshalJSON() ([]byte, error) {
+	type Alias Order
+	alias := &struct {
+		*Alias
+	}{
+		Alias: (*Alias)(&o),
+	}
+	if o.Status != "Success" {
+		alias.DetailLocation = nil
+	}
+	return json.Marshal(alias)
 }
 
 type OrderRequestSwag struct {

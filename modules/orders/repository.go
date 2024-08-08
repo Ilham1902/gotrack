@@ -124,12 +124,14 @@ func (o *orderRepository) GetByID(id int) (Order, error) {
 		return Order{}, err
 	}
 
-	// Jika status adalah "completed", preload DetailLocation dan Location
-	if order.Status == "completed" {
-		err = o.db.Model(&order).Preload("DetailLocation.Location").First(&order).Error
+	// Jika status adalah "Success", preload DetailLocation dan Location
+	if order.Status == "Success" {
+		err = o.db.Preload("DetailLocation.Location").Where("id = ?", id).First(&order).Error
 		if err != nil {
 			return Order{}, err
 		}
+	} else {
+		order.DetailLocation = nil
 	}
 
 	return order, nil
