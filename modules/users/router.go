@@ -17,7 +17,7 @@ func Initiator(router *gin.Engine) {
 	auth.Use(middlewares.Logging())
 	{
 		auth.PUT(":id", Update)
-		api.POST("/signup", middlewares.AuthorizeRole("owner"), SignUp)
+		auth.POST("/signup", middlewares.AuthorizeRole("owner"), SignUp)
 		auth.GET("", middlewares.AuthorizeRole("owner"), GetList)
 		auth.GET(":id", middlewares.AuthorizeRole("owner"), GetByID)
 		auth.DELETE(":id", middlewares.AuthorizeRole("owner"), Delete)
