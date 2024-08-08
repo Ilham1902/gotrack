@@ -9,7 +9,7 @@ import (
 type Repository interface {
 	Login(user LoginRequest) (result User, err error)
 	SignUp(user User) (err error)
-	Update(user User, id int) (err error)
+	Update(user User, id int, role string) (err error)
 	Delete(id int) (err error)
 	GetAll(search string, page int, limit int) (users []User, err error)
 	FindByID(id uint) (User, error)
@@ -49,28 +49,26 @@ func (r *userRepository) SignUp(user User) (err error) {
 	return nil
 }
 
-func (r *userRepository) Update(user User, id int) (err error) {
+func (r *userRepository) Update(user User, id int, role string) (err error) {
+	updateData := map[string]interface{}{
+		"Username": user.Username,
+	}
+
 	if user.Password != "" {
 		hashedPassword, err := common.HashPassword(user.Password)
 		if err != nil {
 			return err
 		}
-		user.Password = hashedPassword
+		updateData["Password"] = hashedPassword
+	}
 
-		if err := r.db.Model(&User{}).Where("id = ?", id).Updates(User{
-			Username: user.Username,
-			Password: user.Password,
-			Role:     user.Role,
-		}).Error; err != nil {
-			return err
-		}
-	} else {
-		if err := r.db.Model(&User{}).Where("id = ?", id).Updates(User{
-			Username: user.Username,
-			Role:     user.Role,
-		}).Error; err != nil {
-			return err
-		}
+	// Only add Role to updateData if the user is an owner
+	if role == "owner" {
+		updateData["Role"] = user.Role
+	}
+
+	if err := r.db.Model(&User{}).Where("id = ?", id).Updates(updateData).Error; err != nil {
+		return err
 	}
 
 	return nil

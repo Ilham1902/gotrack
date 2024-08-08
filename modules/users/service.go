@@ -174,7 +174,7 @@ func (service *UserService) Update(ctx *gin.Context) (err error) {
 		IP:       "",
 	}
 
-	if err = service.repository.Update(user, id); err != nil {
+	if err = service.repository.Update(user, id, loginData.Role); err != nil {
 		return err
 	}
 
