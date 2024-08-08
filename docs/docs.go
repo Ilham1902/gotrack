@@ -311,6 +311,11 @@ const docTemplate = `{
         },
         "/api/users/signup": {
             "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
                 "description": "This endpoint is used for user signup",
                 "consumes": [
                     "application/json"

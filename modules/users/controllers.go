@@ -37,6 +37,7 @@ func Login(ctx *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param signUpRequest body SignUpRequest true "Sign Up Request"
+// @Security Bearer
 // @Router /api/users/signup [post]
 func SignUp(ctx *gin.Context) {
 	var (
