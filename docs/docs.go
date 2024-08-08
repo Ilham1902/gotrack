@@ -375,7 +375,7 @@ const docTemplate = `{
                         "Bearer": []
                     }
                 ],
-                "description": "Get By ID order with details provided in the request body.",
+                "description": "Get By ID users with details provided in the request body.",
                 "consumes": [
                     "application/json"
                 ],
@@ -385,7 +385,65 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
-                "summary": "Get By ID order",
+                "summary": "Get By ID users",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Updates a new user with details provided in the request body.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update a new user",
+                "parameters": [
+                    {
+                        "description": "Update Request",
+                        "name": "UpdatePayload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/users.UpdatePayload"
+                        }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Remove a users from the database by its ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete a users by ID",
                 "parameters": [
                     {
                         "type": "integer",
@@ -467,6 +525,20 @@ const docTemplate = `{
             "properties": {
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "users.UpdatePayload": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         }

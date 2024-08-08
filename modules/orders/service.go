@@ -44,9 +44,13 @@ func (o *orderServices) Create(ctx *gin.Context) (err error) {
 		return errors.New("validation failed: " + err.Error())
 	}
 
-	_, err = o.repository.FindEmployee(request.EmployeeID)
+	dataUser, err := o.repository.FindEmployee(request.EmployeeID)
 	if err != nil {
 		return errors.New("employee not found")
+	}
+
+	if dataUser.Role == "owner" {
+		return errors.New("this user is owner")
 	}
 
 	order := Order{
@@ -55,7 +59,6 @@ func (o *orderServices) Create(ctx *gin.Context) (err error) {
 		Location:    request.Location,
 		Description: request.Description,
 		Status:      "Pending",
-		// Employee: *employee,
 	}
 
 	if err = o.repository.Create(&order); err != nil {

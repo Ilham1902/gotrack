@@ -53,30 +53,6 @@ func SignUp(ctx *gin.Context) {
 	common.GenerateSuccessResponse(ctx, "awesome, successfully create user")
 }
 
-// Track Employee godoc
-// @Tags Users
-// @Summary Track Employee
-// @Description This endpoint is used for Track Employee
-// @Accept json
-// @Produce json
-// @Param TrackRequest body TrackRequest true "Sign Up Request"
-// @Security Bearer
-// @Router /api/users/track [post]
-func Track(ctx *gin.Context) {
-	var (
-		userRepo = NewRepository(database.DBConnections)
-		userSrv  = NewService(userRepo)
-	)
-
-	data, err := userSrv.Track(ctx)
-	if err != nil {
-		common.GenerateErrorResponse(ctx, err.Error())
-		return
-	}
-
-	common.GenerateSuccessResponseWithData(ctx, "awesome, successfully create user", data)
-}
-
 // GetAllUser godoc
 // @Summary Get all users
 // @Description Get all users with search and pagination
@@ -104,8 +80,8 @@ func GetList(ctx *gin.Context) {
 }
 
 // GetByID godoc
-// @Summary Get By ID order
-// @Description Get By ID order with details provided in the request body.
+// @Summary Get By ID users
+// @Description Get By ID users with details provided in the request body.
 // @Tags Users
 // @Accept json
 // @Produce json
@@ -125,4 +101,76 @@ func GetByID(ctx *gin.Context) {
 	}
 
 	common.GenerateSuccessResponseWithData(ctx, "successfully Get User data", data)
+}
+
+// Update godoc
+// @Summary Update a new user
+// @Description Updates a new user with details provided in the request body.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param UpdatePayload body UpdatePayload true "Update Request"
+// @Security Bearer
+// @Router /api/users/{id} [put]
+func Update(ctx *gin.Context) {
+	var (
+		userRepo = NewRepository(database.DBConnections)
+		userSrv  = NewService(userRepo)
+	)
+
+	err := userSrv.Update(ctx)
+	if err != nil {
+		common.GenerateErrorResponse(ctx, err.Error())
+		return
+	}
+
+	common.GenerateSuccessResponse(ctx, "successfully updated User data")
+}
+
+// Delete godoc
+// @Summary Delete a users by ID
+// @Description Remove a users from the database by its ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id path int true "User ID"
+// @Security Bearer
+// @Router /api/users/{id} [delete]
+func Delete(ctx *gin.Context) {
+	var (
+		usersRepo = NewRepository(database.DBConnections)
+		usersSrv  = NewService(usersRepo)
+	)
+
+	err := usersSrv.Delete(ctx)
+	if err != nil {
+		common.GenerateErrorResponse(ctx, err.Error())
+		return
+	}
+
+	common.GenerateSuccessResponse(ctx, "successfully delete user")
+}
+
+// Track Employee godoc
+// @Tags Users
+// @Summary Track Employee
+// @Description This endpoint is used for Track Employee
+// @Accept json
+// @Produce json
+// @Param TrackRequest body TrackRequest true "Sign Up Request"
+// @Security Bearer
+// @Router /api/users/track [post]
+func Track(ctx *gin.Context) {
+	var (
+		userRepo = NewRepository(database.DBConnections)
+		userSrv  = NewService(userRepo)
+	)
+
+	data, err := userSrv.Track(ctx)
+	if err != nil {
+		common.GenerateErrorResponse(ctx, err.Error())
+		return
+	}
+
+	common.GenerateSuccessResponseWithData(ctx, "awesome, successfully create user", data)
 }

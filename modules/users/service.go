@@ -9,6 +9,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"gorm.io/gorm"
 )
 
 type Service interface {
@@ -16,16 +18,20 @@ type Service interface {
 	SignUpService(ctx *gin.Context) (err error)
 	FindByID(ctx *gin.Context) (user User, err error)
 	GetAll(ctx *gin.Context) (result []User, err error)
+	Update(ctx *gin.Context) (err error)
+	Delete(ctx *gin.Context) (err error)
 	Track(ctx *gin.Context) (interface{}, error)
 }
 
 type UserService struct {
 	repository Repository
+	validate   *validator.Validate
 }
 
 func NewService(repository Repository) Service {
 	return &UserService{
 		repository,
+		validator.New(),
 	}
 }
 
@@ -120,6 +126,65 @@ func (service *UserService) GetAll(ctx *gin.Context) (result []User, err error) 
 	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10")) // Default to limit 10
 
 	return service.repository.GetAll(search, page, limit)
+}
+
+// Update implements Service.
+func (service *UserService) Update(ctx *gin.Context) (err error) {
+
+	request := new(UpdatePayload)
+
+	if err = ctx.BindJSON(&request); err != nil {
+		return errors.New("invalid request")
+	}
+
+	// Validate request data
+	if err = service.validate.Struct(request); err != nil {
+		return errors.New("validation failed: " + err.Error())
+	}
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return fmt.Errorf("invalid ID format")
+	}
+
+	user := User{
+		Username: request.Username,
+		Password: request.Password,
+		Role:     request.Role,
+		IP:       "",
+	}
+
+	if err = service.repository.Update(user, id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Delete implements Service.
+func (service *UserService) Delete(ctx *gin.Context) (err error) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return fmt.Errorf("invalid ID format")
+	}
+
+	exists, err := service.repository.FindByID(uint(id))
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errors.New("user with given ID does not exist")
+		}
+		return err
+	}
+
+	if (exists == User{}) {
+		return errors.New("user with given ID does not exist")
+	}
+
+	if err = service.repository.Delete(id); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (service *UserService) FindByID(ctx *gin.Context) (User, error) {

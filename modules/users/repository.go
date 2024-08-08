@@ -9,8 +9,8 @@ import (
 type Repository interface {
 	Login(user LoginRequest) (result User, err error)
 	SignUp(user User) (err error)
-	Update(user User) (err error)
-	Delete(user User) (err error)
+	Update(user User, id int) (err error)
+	Delete(id int) (err error)
 	GetAll(search string, page int, limit int) (users []User, err error)
 	FindByID(id uint) (User, error)
 	UpdateIPEmployee(userID uint, ipAddress string) error
@@ -49,24 +49,35 @@ func (r *userRepository) SignUp(user User) (err error) {
 	return nil
 }
 
-func (r *userRepository) Update(user User) (err error) {
+func (r *userRepository) Update(user User, id int) (err error) {
 	if user.Password != "" {
 		hashedPassword, err := common.HashPassword(user.Password)
 		if err != nil {
 			return err
 		}
 		user.Password = hashedPassword
-	}
 
-	if err := r.db.Model(&User{}).Where("username = ?", user.Username).Updates(User{Username: user.Username, Password: user.Password}).Error; err != nil {
-		return err
+		if err := r.db.Model(&User{}).Where("id = ?", id).Updates(User{
+			Username: user.Username,
+			Password: user.Password,
+			Role:     user.Role,
+		}).Error; err != nil {
+			return err
+		}
+	} else {
+		if err := r.db.Model(&User{}).Where("id = ?", id).Updates(User{
+			Username: user.Username,
+			Role:     user.Role,
+		}).Error; err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
-func (r *userRepository) Delete(user User) (err error) {
-	if err := r.db.Where("username = ?", user.Username).Delete(&User{}).Error; err != nil {
+func (r *userRepository) Delete(id int) (err error) {
+	if err := r.db.Where("id = ?", id).Delete(&User{}).Error; err != nil {
 		return err
 	}
 	return nil

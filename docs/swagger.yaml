@@ -44,6 +44,15 @@ definitions:
       user_id:
         type: integer
     type: object
+  users.UpdatePayload:
+    properties:
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
 host: gotrack-production-2b8d.up.railway.app
 info:
   contact: {}
@@ -222,10 +231,10 @@ paths:
       tags:
       - Users
   /api/users/{id}:
-    get:
+    delete:
       consumes:
       - application/json
-      description: Get By ID order with details provided in the request body.
+      description: Remove a users from the database by its ID
       parameters:
       - description: User ID
         in: path
@@ -237,7 +246,44 @@ paths:
       responses: {}
       security:
       - Bearer: []
-      summary: Get By ID order
+      summary: Delete a users by ID
+      tags:
+      - Users
+    get:
+      consumes:
+      - application/json
+      description: Get By ID users with details provided in the request body.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - Bearer: []
+      summary: Get By ID users
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Updates a new user with details provided in the request body.
+      parameters:
+      - description: Update Request
+        in: body
+        name: UpdatePayload
+        required: true
+        schema:
+          $ref: '#/definitions/users.UpdatePayload'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - Bearer: []
+      summary: Update a new user
       tags:
       - Users
   /api/users/login:

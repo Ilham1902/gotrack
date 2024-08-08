@@ -143,19 +143,6 @@ type TrackRequest struct {
 
 func GetGeoLocation(ip string) (interface{}, error) {
 
-	// params: httpClient, cache, token. `http.DefaultClient` and no cache will be used in case of `nil`.
-	client := ipinfo.NewClient(nil, nil, os.Getenv("token_ipinfo"))
-
-	ip_address := ip
-	info, err := client.GetIPInfo(net.ParseIP(ip_address))
-
-	if err != nil {
-		// log.Fatal(err)
-		return nil, err
-	}
-
-	return &info, nil
-
 	// url := fmt.Sprintf("https://ipinfo.io/%s/json", ip)
 	// response, err := http.Get(url)
 	// if err != nil {
@@ -179,4 +166,36 @@ func GetGeoLocation(ip string) (interface{}, error) {
 	// }
 
 	// return &geoLocation, nil
+
+	client := ipinfo.NewClient(nil, nil, os.Getenv("token_ipinfo"))
+
+	ip_address := ip
+	info, err := client.GetIPInfo(net.ParseIP(ip_address))
+
+	if err != nil {
+		// log.Fatal(err)
+		return nil, err
+	}
+
+	return &info, nil
+}
+
+type UpdatePayload struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Role     string `json:"role"`
+}
+
+func (s *UpdatePayload) ConvertToModelForUpdatePayload() (user User, err error) {
+	hashedPassword, err := common.HashPassword(s.Password)
+	if err != nil {
+		err = errors.New("hashing password failed")
+		return
+	}
+
+	return User{
+		Username: s.Username,
+		Password: hashedPassword,
+		Role:     s.Role,
+	}, nil
 }

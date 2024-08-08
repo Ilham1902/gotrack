@@ -36,7 +36,6 @@ func main() {
 
 	router := gin.Default()
 
-	// db.AutoMigrate(&users.User{}, &models.Order{}, &models.OrderDetail{}, &models.OrderHistory{}, &models.IPInfo{})
 	db.AutoMigrate(&users.User{}, &orders.Order{}, &orders.OrderDetail{}, &users.IPInfo{}, &users.DetailLocation{})
 
 	swagger.Initiator(router)
