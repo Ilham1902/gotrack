@@ -1,14 +1,13 @@
 package users
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
 	"gotrack/helpers/common"
-	"io"
-	"net/http"
+	"net"
+	"os"
 	"regexp"
 
+	"github.com/ipinfo/go/v2/ipinfo"
 	"gorm.io/gorm"
 )
 
@@ -141,28 +140,42 @@ type TrackRequest struct {
 	UserId uint `json:"user_id"`
 }
 
-func GetGeoLocation(ip string) (*IPInfo, error) {
-	url := fmt.Sprintf("https://ipinfo.io/%s/json", ip)
-	response, err := http.Get(url)
+func GetGeoLocation(ip string) (interface{}, error) {
+
+	// params: httpClient, cache, token. `http.DefaultClient` and no cache will be used in case of `nil`.
+	client := ipinfo.NewClient(nil, nil, os.Getenv("token_ipinfo"))
+
+	ip_address := ip
+	info, err := client.GetIPInfo(net.ParseIP(ip_address))
+
 	if err != nil {
-		return nil, fmt.Errorf("failed to make request: %v", err)
-	}
-	defer response.Body.Close()
-
-	// Periksa status kode HTTP
-	if response.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", response.StatusCode)
+		// log.Fatal(err)
+		return nil, err
 	}
 
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read response body: %v", err)
-	}
+	return &info, nil
 
-	var geoLocation IPInfo
-	if err := json.Unmarshal(body, &geoLocation); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal response body: %v", err)
-	}
+	// url := fmt.Sprintf("https://ipinfo.io/%s/json", ip)
+	// response, err := http.Get(url)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to make request: %v", err)
+	// }
+	// defer response.Body.Close()
 
-	return &geoLocation, nil
+	// // Periksa status kode HTTP
+	// if response.StatusCode != http.StatusOK {
+	// 	return nil, fmt.Errorf("unexpected status code: %d", response.StatusCode)
+	// }
+
+	// body, err := io.ReadAll(response.Body)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to read response body: %v", err)
+	// }
+
+	// var geoLocation IPInfo
+	// if err := json.Unmarshal(body, &geoLocation); err != nil {
+	// 	return nil, fmt.Errorf("failed to unmarshal response body: %v", err)
+	// }
+
+	// return &geoLocation, nil
 }

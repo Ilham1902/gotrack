@@ -101,15 +101,15 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Delivery Orders"
+                    "Delivery"
                 ],
                 "summary": "Delivery order",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "ID Order",
+                        "type": "integer",
+                        "description": "Order ID",
                         "name": "id",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],
@@ -131,10 +131,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Delivery Success"
+                    "Delivery"
                 ],
                 "summary": "Delivery Success",
                 "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "file",
                         "description": "Bukti Pengiriman Success",

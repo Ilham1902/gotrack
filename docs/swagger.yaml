@@ -158,11 +158,11 @@ paths:
       - application/json
       description: Deliverys a new order with details provided in the request body.
       parameters:
-      - description: ID Order
-        in: query
+      - description: Order ID
+        in: path
         name: id
         required: true
-        type: string
+        type: integer
       produces:
       - application/json
       responses: {}
@@ -170,13 +170,18 @@ paths:
       - Bearer: []
       summary: Delivery order
       tags:
-      - Delivery Orders
+      - Delivery
   /api/order/success/{id}:
     post:
       consumes:
       - multipart/form-data
       description: Delivery Success
       parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
       - description: Bukti Pengiriman Success
         in: formData
         name: file
@@ -189,7 +194,7 @@ paths:
       - Bearer: []
       summary: Delivery Success
       tags:
-      - Delivery Success
+      - Delivery
   /api/users:
     get:
       consumes:

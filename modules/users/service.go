@@ -16,7 +16,7 @@ type Service interface {
 	SignUpService(ctx *gin.Context) (err error)
 	FindByID(ctx *gin.Context) (user User, err error)
 	GetAll(ctx *gin.Context) (result []User, err error)
-	Track(ctx *gin.Context) (*IPInfo, error)
+	Track(ctx *gin.Context) (interface{}, error)
 }
 
 type UserService struct {
@@ -137,7 +137,7 @@ func (service *UserService) FindByID(ctx *gin.Context) (User, error) {
 }
 
 // Track implements Service.
-func (service *UserService) Track(ctx *gin.Context) (*IPInfo, error) {
+func (service *UserService) Track(ctx *gin.Context) (interface{}, error) {
 	var request struct {
 		UserID uint `json:"user_id" binding:"required"`
 	}
@@ -155,6 +155,6 @@ func (service *UserService) Track(ctx *gin.Context) (*IPInfo, error) {
 		return nil, errors.New("failed to get geo location")
 	}
 
-	geoLocation.UserID = user.ID
+	// geoLocation.UserID = user.ID
 	return geoLocation, nil
 }

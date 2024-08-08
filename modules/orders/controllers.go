@@ -132,10 +132,10 @@ func Delete(ctx *gin.Context) {
 // Delivery godoc
 // @Summary Delivery order
 // @Description Deliverys a new order with details provided in the request body.
-// @Tags Delivery Orders
+// @Tags Delivery
 // @Accept json
 // @Produce json
-// @Param id query string true "ID Order"
+// @Param id path int true "Order ID"
 // @Security Bearer
 // @Router /api/order/delivery/{id} [post]
 func Delivery(ctx *gin.Context) {
@@ -156,9 +156,10 @@ func Delivery(ctx *gin.Context) {
 // Delivery Success godoc
 // @Summary Delivery Success
 // @Description Delivery Success
-// @Tags Delivery Success
+// @Tags Delivery
 // @Accept multipart/form-data
 // @Produce json
+// @Param id path int true "Order ID"
 // @Param file formData file true "Bukti Pengiriman Success"
 // @Security Bearer
 // @Router /api/order/success/{id} [post]
