@@ -147,6 +147,11 @@ paths:
       - application/json
       description: Updates a new order with details provided in the request body.
       parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
       - description: Order data
         in: body
         name: order

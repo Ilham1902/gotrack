@@ -201,6 +201,13 @@ const docTemplate = `{
                 "summary": "Update a new order",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Order data",
                         "name": "order",
                         "in": "body",

@@ -87,6 +87,7 @@ func GetByID(ctx *gin.Context) {
 // @Tags Orders
 // @Accept json
 // @Produce json
+// @Param id path int true "Order ID"
 // @Param order body OrderRequestSwag true "Order data"
 // @Security Bearer
 // @Router /api/order/{id} [put]
