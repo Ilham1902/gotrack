@@ -272,6 +272,11 @@ paths:
       - application/json
       description: Updates a new user with details provided in the request body.
       parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
       - description: Update Request
         in: body
         name: UpdatePayload

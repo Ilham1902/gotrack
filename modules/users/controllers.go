@@ -109,6 +109,7 @@ func GetByID(ctx *gin.Context) {
 // @Tags Users
 // @Accept json
 // @Produce json
+// @Param id path int true "User ID"
 // @Param UpdatePayload body UpdatePayload true "Update Request"
 // @Security Bearer
 // @Router /api/users/{id} [put]

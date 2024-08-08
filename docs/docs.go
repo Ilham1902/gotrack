@@ -416,6 +416,13 @@ const docTemplate = `{
                 "summary": "Update a new user",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Update Request",
                         "name": "UpdatePayload",
                         "in": "body",

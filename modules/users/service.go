@@ -131,6 +131,16 @@ func (service *UserService) GetAll(ctx *gin.Context) (result []User, err error) 
 // Update implements Service.
 func (service *UserService) Update(ctx *gin.Context) (err error) {
 
+	userLogin, exists := ctx.Get("auth")
+	if !exists {
+		return errors.New("user not authenticated")
+	}
+
+	loginData, ok := userLogin.(middlewares.UserLoginRedis)
+	if !ok {
+		return errors.New("invalid user data")
+	}
+
 	request := new(UpdatePayload)
 
 	if err = ctx.BindJSON(&request); err != nil {
@@ -142,10 +152,20 @@ func (service *UserService) Update(ctx *gin.Context) (err error) {
 		return errors.New("validation failed: " + err.Error())
 	}
 
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		return fmt.Errorf("invalid ID format")
+	var id int
+	if loginData.Role == "owner" {
+		id, err = strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			return fmt.Errorf("invalid ID format")
+		}
+	} else {
+		id = int(loginData.UserId)
 	}
+
+	// id, err := strconv.Atoi(ctx.Param("id"))
+	// if err != nil {
+	// 	return fmt.Errorf("invalid ID format")
+	// }
 
 	user := User{
 		Username: request.Username,
