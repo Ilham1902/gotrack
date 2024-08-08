@@ -87,6 +87,14 @@ func (o *orderServices) Delete(ctx *gin.Context) (err error) {
 		return fmt.Errorf("invalid ID format")
 	}
 
+	exists, err := o.repository.IsOrderExists(id)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		return errors.New("orders with ID does not exist")
+	}
+
 	var orderReq OrderRequest
 
 	err = ctx.ShouldBind(&orderReq)
@@ -131,6 +139,14 @@ func (o *orderServices) GetById(ctx *gin.Context) (result Order, err error) {
 		return Order{}, fmt.Errorf("invalid ID format")
 	}
 
+	exists, err := o.repository.IsOrderExists(id)
+	if err != nil {
+		return Order{}, err
+	}
+	if !exists {
+		return Order{}, errors.New("orders with ID does not exist")
+	}
+
 	data, err := o.repository.GetByID(id)
 	if err != nil {
 		return Order{}, err
@@ -144,6 +160,14 @@ func (o *orderServices) Update(ctx *gin.Context) error {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		return fmt.Errorf("invalid ID format")
+	}
+
+	exists, err := o.repository.IsOrderExists(id)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		return errors.New("orders with ID does not exist")
 	}
 
 	var request OrderRequest
@@ -195,6 +219,14 @@ func (o *orderServices) Delivery(ctx *gin.Context) error {
 		return fmt.Errorf("invalid ID format")
 	}
 
+	exists, err := o.repository.IsOrderExists(id)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		return errors.New("orders with ID does not exist")
+	}
+
 	if err := o.repository.Delivery(id); err != nil {
 		return err
 	}
@@ -204,6 +236,19 @@ func (o *orderServices) Delivery(ctx *gin.Context) error {
 
 // Success implements Service.
 func (o *orderServices) Success(ctx *gin.Context) (err error) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return fmt.Errorf("invalid ID format")
+	}
+
+	exists, err := o.repository.IsOrderExists(id)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		return errors.New("orders with ID does not exist")
+	}
+
 	// Parse the form data
 	if err = ctx.Request.ParseMultipartForm(5 << 20); err != nil {
 		return errors.New("unable to parse form")
@@ -237,7 +282,7 @@ func (o *orderServices) Success(ctx *gin.Context) (err error) {
 	// Get IP address of the requester
 	ip := ctx.ClientIP()
 
-	if err := o.repository.Success(ip, fileName); err != nil {
+	if err := o.repository.Success(id, ip, fileName); err != nil {
 		return err
 	}
 

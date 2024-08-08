@@ -14,9 +14,10 @@ type Repository interface {
 	Delete(id int) error
 	Update(order Order, id int, details []OrderDetail) error
 	FindEmployee(id int) (*users.User, error)
+	IsOrderExists(id int) (bool, error)
 	CreateOrderDetails(details []OrderDetail) error
 	Delivery(id int) error
-	Success(ip string, filename string) error
+	Success(id int, ip string, filename string) error
 }
 
 type orderRepository struct {
@@ -49,6 +50,16 @@ func (o *orderRepository) FindEmployee(id int) (*users.User, error) {
 	}
 
 	return &user, nil
+}
+
+func (o *orderRepository) IsOrderExists(id int) (bool, error) {
+	var order Order
+
+	if err := o.db.First(&order, id).Error; err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 // Create implements Repository.
@@ -104,10 +115,23 @@ func (o *orderRepository) GetAll(role string, idUser int, search string, page in
 // GetByID implements Repository.
 func (o *orderRepository) GetByID(id int) (Order, error) {
 	var order Order
-	err := o.db.Model(&Order{}).Where("id = ?", id).Preload("OrderDetails").Preload("Employee").First(&order).Error
+
+	err := o.db.Model(&Order{}).Where("id = ?", id).
+		Preload("OrderDetails").
+		Preload("Employee").
+		First(&order).Error
 	if err != nil {
 		return Order{}, err
 	}
+
+	// Jika status adalah "completed", preload DetailLocation dan Location
+	if order.Status == "completed" {
+		err = o.db.Model(&order).Preload("DetailLocation.Location").First(&order).Error
+		if err != nil {
+			return Order{}, err
+		}
+	}
+
 	return order, nil
 }
 
@@ -143,7 +167,7 @@ func (o *orderRepository) Delivery(id int) error {
 }
 
 // Success implements Repository.
-func (o *orderRepository) Success(ip string, filename string) error {
+func (o *orderRepository) Success(id int, ip string, filename string) error {
 	// Get IP info from IPinfo
 	ipInfo, err := getIPInfo(ip)
 	if err != nil {
@@ -169,10 +193,15 @@ func (o *orderRepository) Success(ip string, filename string) error {
 	ipInfoRecord := users.IPInfo{}
 	o.db.Last(&ipInfoRecord)
 	if err := o.db.Create(&users.DetailLocation{
-		IpID: int(ipInfoRecord.ID),
-		Pict: filename,
+		IpID:    int(ipInfoRecord.ID),
+		OrderID: int(id),
+		Pict:    filename,
 	}).Error; err != nil {
 		return errors.New("unable to save detail location")
+	}
+
+	if err := o.db.Model(&Order{}).Where("id = ?", id).Update("Status", "Success").Error; err != nil {
+		return err
 	}
 
 	return nil

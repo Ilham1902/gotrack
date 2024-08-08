@@ -20,8 +20,9 @@ type Order struct {
 	Status      string `json:"status"` // "pending" or "completed"
 	Description string `json:"description"`
 
-	Employee     users.User    `gorm:"foreignKey:EmployeeID; references:ID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	OrderDetails []OrderDetail `json:"order_details" gorm:"foreignKey:OrderID"`
+	Employee       users.User           `gorm:"foreignKey:EmployeeID; references:ID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	OrderDetails   []OrderDetail        `json:"order_details" gorm:"foreignKey:OrderID"`
+	DetailLocation users.DetailLocation `json:"detail_location" gorm:"foreignKey:OrderID"`
 }
 
 func (Order) TableName() string {
@@ -63,20 +64,20 @@ func (OrderDetail) TableName() string {
 	return "order_detail"
 }
 
-type OrderHistory struct {
-	gorm.Model
-	OrderID        int    `json:"order_id" gorm:"column:order_id"`
-	DetailLocation int    `json:"detail_location"`
-	Note           string `json:"note"`
-	Status         string `json:"status"` // "completed"
+// type OrderHistory struct {
+// 	gorm.Model
+// 	OrderID        int    `json:"order_id" gorm:"column:order_id"`
+// 	DetailLocation int    `json:"detail_location"`
+// 	Note           string `json:"note"`
+// 	Status         string `json:"status"` // "completed"
 
-	Order    Order                `gorm:"foreignKey:OrderID; references:ID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Location users.DetailLocation `gorm:"foreignKey:DetailLocation; references:ID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-}
+// 	Order    Order                `gorm:"foreignKey:OrderID; references:ID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+// 	Location users.DetailLocation `gorm:"foreignKey:DetailLocation; references:ID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+// }
 
-func (OrderHistory) TableName() string {
-	return "order_history"
-}
+// func (OrderHistory) TableName() string {
+// 	return "order_history"
+// }
 
 func HashFilename(filename string) string {
 	hash := sha256.New()

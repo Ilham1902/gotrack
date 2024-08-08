@@ -57,6 +57,7 @@ type IPInfoResponse struct {
 type DetailLocation struct {
 	gorm.Model
 	IpID     int    `json:"ip_id" gorm:"column:ip_id"`
+	OrderID  int    `json:"order_id" gorm:"column:order_id"`
 	Pict     string `json:"bukti_pengiriman"`
 	Location IPInfo `gorm:"foreignKey:IpID; references:ID; constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
